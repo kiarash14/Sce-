@@ -232,19 +232,15 @@ function create_config( )
 	"whitelist",
 	"msg_checks"
     },
-    sudo_users = {110626080,103649648,111020322,0,tonumber(our_id)},--Sudo users
+    sudo_users = {100096055,tonumber(our_id)},--Sudo users
     moderation = {data = 'data/moderation.json'},
-    about_text = [[Teleseed v4
+    about_text = [[TeleSceneManager v4
 An advanced administration bot based on TG-CLI written in Lua
 
-https://github.com/SEEDTEAM/TeleSeed
+https://telegram.me/scenemanager
 
-Admins
-@iwals [Founder]
-@imandaneshi [Developer]
-@POTUS [Developer]
-@seyedan25 [Manager]
-@aRandomStranger [Admin]
+Sudo:
+@kiarash_gh14
 
 Special thanks to
 awkward_potato
@@ -253,11 +249,8 @@ topkecleon
 Vamptacus
 
 Our channels
-@teleseedch [English]
-@iranseed [persian]
+@SceneCh
 
-Our website 
-http://teleseed.seedteam.org/
 ]],
     help_text_realm = [[
 Realm Commands:
@@ -331,7 +324,7 @@ Only sudo users can run this command
 !bc 123456789 Hello !
 This command will send text to [group_id]
 
-
+!SceneManager
 **You can use "#", "!", or "/" to begin all commands
 
 
@@ -460,6 +453,7 @@ Returns group logs
 !banlist
 will return group ban list
 
+!SceneManager
 **You can use "#", "!", or "/" to begin all commands
 
 
@@ -601,8 +595,9 @@ Returns users name and id by username
 
 !log
 Returns group logs
-*Search for kick reasons using [#RTL|#spam|#lockmember]
+*Search for kick reasons using [#RTL|#spam|#
 
+!SceneManager
 **You can use "#", "!", or "/" to begin all commands
 
 *Only owner can add members to SuperGroup
