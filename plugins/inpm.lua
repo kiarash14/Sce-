@@ -208,7 +208,7 @@ if to == 'user' or service or is_admin1(msg) and to == "chat" or to == "channel"
 
 	if matches[1] == 'help' and msg.to.type == 'user' or matches[1] == 'pmhelp' and is_admin1(msg) and msg.to.type ~= 'user' then
       	savelog(msg.to.id, name_log.." ["..msg.from.id.."] used pm help")
-		text = "Welcome to SceneManager!\n\nTo get a list of SceneManager groups use /chats or /chatlist for a document list of chats.\n\nTo get a new SceneManager group, contact a support group:\n\nFor English support, use: /join English support\n\nFor Persian support, use: /join Persian support\n\nFor more information, check out our channels:\n\n@scenech  \nThanks for using @TeleSeed!"
+		text = "Welcome to SceneManager!\n\nTo get a list of SceneManager groups use /chats or /chatlist for a document list of chats.\n\nTo get a new SceneManager group, contact a support group:\n\nFor English support, use: /join English support\n\nFor Persian support, use: /join Persian support\n\nFor more information, check out our channels:\n\n@scenech  \nThanks for using @SceneManager!"
      	return text
     end
 
