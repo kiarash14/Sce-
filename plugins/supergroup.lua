@@ -103,7 +103,7 @@ end
 
 --Get and output info about supergroup
 local function callback_info(cb_extra, success, result)
-local title ="Info for SuperGroup: ["..result.title.."]\n\n"
+local title ="Scene Info for SuperGroup: ["..result.title.."]\n\n"
 local admin_num = "Admin count: "..result.admins_count.."\n"
 local user_num = "User count: "..result.participants_count.."\n"
 local kicked_num = "Kicked user count: "..result.kicked_count.."\n"
@@ -658,7 +658,7 @@ function get_message_callback(extra, success, result)
 	elseif get_cmd == "del" then
 		delete_msg(result.id, ok_cb, false)
 		savelog(msg.to.id, name_log.." ["..msg.from.id.."] deleted a message by reply")
-	elseif get_cmd == "setadmin" then
+	elseif get_cmd == "padmin" then
 		local user_id = result.from.peer_id
 		local channel_id = "channel#id"..result.to.peer_id
 		channel_set_admin(channel_id, "user#id"..user_id, ok_cb, false)
@@ -669,7 +669,7 @@ function get_message_callback(extra, success, result)
 		end
 		savelog(msg.to.id, name_log.." ["..msg.from.id.."] set: ["..user_id.."] as admin by reply")
 		send_large_msg(channel_id, text)
-	elseif get_cmd == "demoteadmin" then
+	elseif get_cmd == "dadmin" then
 		local user_id = result.from.peer_id
 		local channel_id = "channel#id"..result.to.peer_id
 		if is_admin2(result.from.peer_id) then
@@ -703,7 +703,7 @@ function get_message_callback(extra, success, result)
 			end
 			send_large_msg(channel_id, text)
 		end
-	elseif get_cmd == "promote" then
+	elseif get_cmd == "p" then
 		local receiver = result.to.peer_id
 		local full_name = (result.from.first_name or '')..' '..(result.from.last_name or '')
 		local member_name = full_name:gsub("‮", "")
@@ -717,7 +717,7 @@ function get_message_callback(extra, success, result)
 		promote2("channel#id"..result.to.peer_id, member_username, member_id)
 	    --channel_set_mod(channel_id, user, ok_cb, false)
 		end
-	elseif get_cmd == "demote" then
+	elseif get_cmd == "d" then
 		local full_name = (result.from.first_name or '')..' '..(result.from.last_name or '')
 		local member_name = full_name:gsub("‮", "")
 		local member_username = member_name:gsub("_", " ")
@@ -766,7 +766,7 @@ local function cb_user_info(extra, success, result)
 	local user_id = result.peer_id
 	local get_cmd = extra.get_cmd
 	local data = load_data(_config.moderation.data)
-	--[[if get_cmd == "setadmin" then
+	--[[if get_cmd == "padmin" then
 		local user_id = "user#id"..result.peer_id
 		channel_set_admin(receiver, user_id, ok_cb, false)
 		if result.username then
@@ -775,7 +775,7 @@ local function cb_user_info(extra, success, result)
 			text = "[ "..result.peer_id.." ] has been set as an admin"
 		end
 			send_large_msg(receiver, text)]]
-	if get_cmd == "demoteadmin" then
+	if get_cmd == "dadmin" then
 		if is_admin2(result.peer_id) then
 			return send_large_msg(receiver, "You can't demote global admins!")
 		end
@@ -788,14 +788,14 @@ local function cb_user_info(extra, success, result)
 			text = "[ "..result.peer_id.." ] has been demoted from admin"
 			send_large_msg(receiver, text)
 		end
-	elseif get_cmd == "promote" then
+	elseif get_cmd == "p" then
 		if result.username then
 			member_username = "@"..result.username
 		else
 			member_username = string.gsub(result.print_name, '_', ' ')
 		end
 		promote2(receiver, member_username, user_id)
-	elseif get_cmd == "demote" then
+	elseif get_cmd == "d" then
 		if result.username then
 			member_username = "@"..result.username
 		else
@@ -839,7 +839,7 @@ local function callbackres(extra, success, result)
          return send_large_msg("channel#id"..channel_id, "You can't kick other admins")
     end
 		kick_user(user_id, channel_id)
-	elseif get_cmd == "setadmin" then
+	elseif get_cmd == "padmin" then
 		local user_id = "user#id"..result.peer_id
 		local channel_id = extra.channel
 		channel_set_admin(channel_id, user_id, ok_cb, false)
@@ -872,18 +872,18 @@ local function callbackres(extra, success, result)
 		end
 		send_large_msg(receiver, text)
   end]]
-	elseif get_cmd == "promote" then
+	elseif get_cmd == "p" then
 		local receiver = extra.channel
 		local user_id = result.peer_id
 		--local user = "user#id"..result.peer_id
 		promote2(receiver, member_username, user_id)
 		--channel_set_mod(receiver, user, ok_cb, false)
-	elseif get_cmd == "demote" then
+	elseif get_cmd == "d" then
 		local receiver = extra.channel
 		local user_id = result.peer_id
 		local user = "user#id"..result.peer_id
 		demote2(receiver, member_username, user_id)
-	elseif get_cmd == "demoteadmin" then
+	elseif get_cmd == "dadmin" then
 		local user_id = "user#id"..result.peer_id
 		local channel_id = extra.channel
 		if is_admin2(result.peer_id) then
@@ -958,7 +958,7 @@ if get_cmd == "channel_block" then
       return
     end
   end
-elseif get_cmd == "setadmin" then
+elseif get_cmd == "padmin" then
    for k,v in pairs(result) do
     vusername = v.username
     vpeer_id = tostring(v.peer_id)
@@ -1115,7 +1115,7 @@ local function run(msg, matches)
 			if not is_owner(msg) and not is_support(msg.from.id) then
 				return
 			end
-			member_type = 'Admins'
+			member_type = 'admins'
 			savelog(msg.to.id, name_log.." ["..msg.from.id.."] requested SuperGroup Admins list")
 			admins = channel_get_admins(receiver,callback, {receiver = receiver, msg = msg, member_type = member_type})
 		end
@@ -1259,7 +1259,7 @@ local function run(msg, matches)
 		end
 
 		if msg.text then
-			if msg.text:match("^(https://telegram.me/joinchat/%S+)$") and data[tostring(msg.to.id)]['settings']['set_link'] == 'waiting' and is_owner(msg) then
+			if msg.text:match("^(https://telegram.me/%S+)$") and data[tostring(msg.to.id)]['settings']['set_link'] == 'waiting' and is_owner(msg) then
 				data[tostring(msg.to.id)]['settings']['set_link'] = msg.text
 				save_data(_config.moderation.data, data)
 				return "New link set"
@@ -1306,35 +1306,35 @@ local function run(msg, matches)
 			chaannel_kick(receiver, user, ok_cb, false)
 		end]]
 
-			if matches[1] == 'setadmin' then
+			if matches[1] == 'padmin' then
 				if not is_support(msg.from.id) and not is_owner(msg) then
 					return
 				end
 			if type(msg.reply_id) ~= "nil" then
 				local cbreply_extra = {
-					get_cmd = 'setadmin',
+					get_cmd = 'padmin',
 					msg = msg
 				}
 				setadmin = get_message(msg.reply_id, get_message_callback, cbreply_extra)
-			elseif matches[1] == 'setadmin' and string.match(matches[2], '^%d+$') then
+			elseif matches[1] == 'padmin' and string.match(matches[2], '^%d+$') then
 			--[[]	local receiver = get_receiver(msg)
 				local user_id = "user#id"..matches[2]
-				local get_cmd = 'setadmin'
+				local get_cmd = 'padmin'
 				user_info(user_id, cb_user_info, {receiver = receiver, get_cmd = get_cmd})]]
-				local	get_cmd = 'setadmin'
+				local	get_cmd = 'padmin'
 				local	msg = msg
 				local user_id = matches[2]
 				channel_get_users (receiver, in_channel_cb, {get_cmd=get_cmd, receiver=receiver, msg=msg, user_id=user_id})
-			elseif matches[1] == 'setadmin' and not string.match(matches[2], '^%d+$') then
+			elseif matches[1] == 'padmin' and not string.match(matches[2], '^%d+$') then
 				--[[local cbres_extra = {
 					channel = get_receiver(msg),
-					get_cmd = 'setadmin'
-				}
+					get_cmd = 'padmin'
+				} 
 				local username = matches[2]
 				local username = string.gsub(matches[2], '@', '')
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] set admin @"..username)
 				resolve_username(username, callbackres, cbres_extra)]]
-				local	get_cmd = 'setadmin'
+				local	get_cmd = 'padmin'
 				local	msg = msg
 				local username = matches[2]
 				local username = string.gsub(matches[2], '@', '')
@@ -1342,25 +1342,25 @@ local function run(msg, matches)
 			end
 		end
 
-		if matches[1] == 'demoteadmin' then
+		if matches[1] == 'dadmin' then
 			if not is_support(msg.from.id) and not is_owner(msg) then
 				return
 			end
 			if type(msg.reply_id) ~= "nil" then
 				local cbreply_extra = {
-					get_cmd = 'demoteadmin',
+					get_cmd = 'dadmin',
 					msg = msg
 				}
 				demoteadmin = get_message(msg.reply_id, get_message_callback, cbreply_extra)
-			elseif matches[1] == 'demoteadmin' and string.match(matches[2], '^%d+$') then
+			elseif matches[1] == 'dadmin' and string.match(matches[2], '^%d+$') then
 				local receiver = get_receiver(msg)
 				local user_id = "user#id"..matches[2]
-				local get_cmd = 'demoteadmin'
+				local get_cmd = 'dadmin'
 				user_info(user_id, cb_user_info, {receiver = receiver, get_cmd = get_cmd})
-			elseif matches[1] == 'demoteadmin' and not string.match(matches[2], '^%d+$') then
+			elseif matches[1] == 'dadmin' and not string.match(matches[2], '^%d+$') then
 				local cbres_extra = {
 					channel = get_receiver(msg),
-					get_cmd = 'demoteadmin'
+					get_cmd = 'dadmin'
 				}
 				local username = matches[2]
 				local username = string.gsub(matches[2], '@', '')
@@ -1405,7 +1405,7 @@ local function run(msg, matches)
 			end
 		end
 
-		if matches[1] == 'promote' then
+		if matches[1] == 'p' then
 		  if not is_momod(msg) then
 				return
 			end
@@ -1418,16 +1418,16 @@ local function run(msg, matches)
 					msg = msg
 				}
 				promote = get_message(msg.reply_id, get_message_callback, cbreply_extra)
-			elseif matches[1] == 'promote' and string.match(matches[2], '^%d+$') then
+			elseif matches[1] == 'p' and string.match(matches[2], '^%d+$') then
 				local receiver = get_receiver(msg)
 				local user_id = "user#id"..matches[2]
-				local get_cmd = 'promote'
+				local get_cmd = 'p'
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] promoted user#id"..matches[2])
 				user_info(user_id, cb_user_info, {receiver = receiver, get_cmd = get_cmd})
-			elseif matches[1] == 'promote' and not string.match(matches[2], '^%d+$') then
+			elseif matches[1] == 'p' and not string.match(matches[2], '^%d+$') then
 				local cbres_extra = {
 					channel = get_receiver(msg),
-					get_cmd = 'promote',
+					get_cmd = 'p',
 				}
 				local username = matches[2]
 				local username = string.gsub(matches[2], '@', '')
@@ -1449,7 +1449,7 @@ local function run(msg, matches)
 			return "ok"
 		end
 
-		if matches[1] == 'demote' then
+		if matches[1] == 'd' then
 			if not is_momod(msg) then
 				return
 			end
@@ -1458,20 +1458,20 @@ local function run(msg, matches)
 			end
 			if type(msg.reply_id) ~= "nil" then
 				local cbreply_extra = {
-					get_cmd = 'demote',
+					get_cmd = 'd',
 					msg = msg
 				}
 				demote = get_message(msg.reply_id, get_message_callback, cbreply_extra)
-			elseif matches[1] == 'demote' and string.match(matches[2], '^%d+$') then
+			elseif matches[1] == 'd' and string.match(matches[2], '^%d+$') then
 				local receiver = get_receiver(msg)
 				local user_id = "user#id"..matches[2]
-				local get_cmd = 'demote'
+				local get_cmd = 'd'
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] demoted user#id"..matches[2])
 				user_info(user_id, cb_user_info, {receiver = receiver, get_cmd = get_cmd})
 			elseif not string.match(matches[2], '^%d+$') then
 				local cbres_extra = {
 					channel = get_receiver(msg),
-					get_cmd = 'demote'
+					get_cmd = 'd'
 				}
 				local username = matches[2]
 				local username = string.gsub(matches[2], '@', '')
@@ -1975,60 +1975,60 @@ end
 
 return {
   patterns = {
-	"^[#!/]([Aa]dd)$",
-	"^[#!/]([Rr]em)$",
-	"^[#!/]([Mm]ove) (.*)$",
-	"^[#!/]([Ii]nfo)$",
-	"^[#!/]([Aa]dmins)$",
-	"^[#!/]([Oo]wner)$",
-	"^[#!/]([Mm]odlist)$",
-	"^[#!/]([Bb]ots)$",
-	"^[#!/]([Ww]ho)$",
-	"^[#!/]([Kk]icked)$",
-    "^[#!/]([Bb]lock) (.*)",
-	"^[#!/]([Bb]lock)",
-	"^[#!/]([Tt]osuper)$",
+	"^[#!/]([Aa][Dd][Dd])$",
+	"^[#!/]([Rr][Ee][Mm])$",
+	"^[#!/]([Mm][Oo][Vv]Ee) (.*)$",
+	"^[#!/]([Ii][Nn][Ff][Oo])$",
+	"^[#!/]([Aa][Dd][Mm][Ii][Nn][Ss])$",
+	"^[#!/]([Oo][Ww][Nn][Ee][Rr])$",
+	"^[#!/]([Mm][Oo][Dd][Ll][Ii][Ss][Tt])$",
+	"^[#!/]([Bb][Oo][Tt][Ss])$",
+	"^[#!/]([Ww][Hh][Oo])$",
+	"^[#!/]([Kk][Ii][Cc][Kk][Ee][Dd])$",
+    "^[#!/]([Bb][Ll][Oo][Cc][Kk]) (.*)",
+	"^[#!/]([Bb][Ll][Oo][Cc][Kk])",
+	"^[#!/]([Tt][Oo][Ss][Uu][Pp][Ee][Rr])$",
 	"^[#!/]([Ii][Dd])$",
 	"^[#!/]([Ii][Dd]) (.*)$",
-	"^[#!/]([Kk]ickme)$",
-	"^[#!/]([Kk]ick) (.*)$",
-	"^[#!/]([Nn]ewlink)$",
-	"^[#!/]([Ss]etlink)$",
-	"^[#!/]([Ll]ink)$",
-	"^[#!/]([Rr]es) (.*)$",
-	"^[#!/]([Ss]etadmin) (.*)$",
-	"^[#!/]([Ss]etadmin)",
-	"^[#!/]([Dd]emoteadmin) (.*)$",
-	"^[#!/]([Dd]emoteadmin)",
-	"^[#!/]([Ss]etowner) (.*)$",
-	"^[#!/]([Ss]etowner)$",
-	"^[#!/]([Pp]romote) (.*)$",
-	"^[#!/]([Pp]romote)",
-	"^[#!/]([Dd]emote) (.*)$",
-	"^[#!/]([Dd]emote)",
-	"^[#!/]([Ss]etname) (.*)$",
-	"^[#!/]([Ss]etabout) (.*)$",
-	"^[#!/]([Ss]etrules) (.*)$",
-	"^[#!/]([Ss]etphoto)$",
-	"^[#!/]([Ss]etusername) (.*)$",
-	"^[#!/]([Dd]el)$",
-	"^[#!/]([Ll]ock) (.*)$",
-	"^[#!/]([Uu]nlock) (.*)$",
-	"^[#!/]([Mm]ute) ([^%s]+)$",
-	"^[#!/]([Uu]nmute) ([^%s]+)$",
-	"^[#!/]([Mm]uteuser)$",
-	"^[#!/]([Mm]uteuser) (.*)$",
-	"^[#!/]([Pp]ublic) (.*)$",
-	"^[#!/]([Ss]ettings)$",
-	"^[#!/]([Rr]ules)$",
-	"^[#!/]([Ss]etflood) (%d+)$",
-	"^[#!/]([Cc]lean) (.*)$",
-	"^[#!/]([Hh]elp)$",
-	"^[#!/]([Mm]uteslist)$",
-	"^[#!/]([Mm]utelist)$",
-    "[#!/](mp) (.*)",
-	"[#!/](md) (.*)",
-    "^(https://telegram.me/joinchat/%S+)$",
+	"^[#!/]([Kk][Ii][Cc][Kk][Mm][Ee])$",
+	"^[#!/]([Kk]) (.*)$",
+	"^[#!/]([Nn][Ee][Ww][Ll][Ii][Nn][Kk])$",
+	"^[#!/]([Ss][Ee][Tt][Ll][Ii][Nn][Kk])$",
+	"^[#!/]([Ll][Ii][Nn][Kk])$",
+	"^[#!/]([Rr][Ee][Ss]) (.*)$",
+	"^[#!/]([Pp][Aa][Dd][Mm][Ii][Nn]) (.*)$",
+	"^[#!/]([Pp][Aa][Dd][Mm][Ii][Nn])",
+	"^[#!/]([Dd][Aa][Dd][Mm][Ii][Nn]) (.*)$",
+	"^[#!/]([Dd][Aa][Dd][Mm][Ii][Nn])",
+	"^[#!/]([Ss][Ee][Tt][Oo][Ww][Nn][Ee][Rr]) (.*)$",
+	"^[#!/]([Ss][Ee][Tt][Oo][Ww][Nn][Ee][Rr])$",
+	"^[#!/]([Pp]) (.*)$",
+	"^[#!/]([Pp])",
+	"^[#!/]([Dd]) (.*)$",
+	"^[#!/]([Dd])",
+	"^[#!/]([Ss][Ee][Tt][Nn][Aa][Mm][Ee]) (.*)$",
+	"^[#!/]([Ss][Ee][Tt][Aa][Bb][Oo][Uu][Tt]) (.*)$",
+	"^[#!/]([Ss][Ee][Tt][Rr][Uu][Ll][Ee][Ss]) (.*)$",
+	"^[#!/]([Ss][Ee][Tt][Pp][Hh][Oo][Tt][Oo])$",
+	"^[#!/]([Ss][Ee][Tt][Uu][Ss][Ee][Rr][Nn][Aa][Mm][Ee]) (.*)$",
+	"^[#!/]([Dd][Ee][Ll])$",
+	"^[#!/]([Ll][Oo][Cc][Kk]) (.*)$",
+	"^[#!/]([Uu][Nn][Ll][Oo][Cc][Kk]) (.*)$",
+	"^[#!/]([Mm][Uu][Tt][Ee]) ([^%s]+)$",
+	"^[#!/]([Uu][Nn][Mm][Uu][Tt][Ee]) ([^%s]+)$",
+	"^[#!/]([Mm][Uu][Tt][Ee][Uu][Ss][Ee][Rr)$",
+	"^[#!/]([Mm][Uu][Tt][Ee[Uu][Ss][Ee][Rr]) (.*)$",
+	"^[#!/]([Pp][Uu][Bb][Ll][Ii][Cc]) (.*)$",
+	"^[#!/]([Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss])$",
+	"^[#!/]([Rr][Uu][Ll][Ee][Ss])$",
+	"^[#!/]([Ss][Ee][Tt][Ff][Ll][Oo][Oo][Dd]) (%d+)$",
+	"^[#!/]([Cc][Ll][Ee][Aa][Nn]) (.*)$",
+	"^[#!/]([Hh][Ee][Ll][Pp])$",
+	"^[#!/]([Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt])$",
+	"^[#!/]([Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt])$",
+    "[#!/]([Mm][Pp]) (.*)",
+	"[#!/]([Mm][Dd]) (.*)",
+    "^(https://telegram.me/%S+)$",
 	"msg.to.peer_id",
 	"%[(document)%]",
 	"%[(photo)%]",
@@ -2036,7 +2036,7 @@ return {
 	"%[(audio)%]",
 	"%[(contact)%]",
 	"^!!tgservice (.+)$",
-  },
+  }, 
   run = run,
   pre_process = pre_process
 }
