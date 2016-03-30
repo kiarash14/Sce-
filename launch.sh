@@ -26,9 +26,9 @@ install() {
   cd ..
 }
 
-if [ "$1" = "install" ]; then
+if [ "$1" = "sceneup" ]; then
   install
-elif [ "$1" = "update" ]; then
+elif [ "$1" = "up" ]; then
   update
 else
   if [ ! -f ./tg/telegram.h ]; then
@@ -43,5 +43,5 @@ else
     exit 1
   fi
   rm -r ../.telegram-cli/state #Prevent tg from crash
-  ./tg/bin/telegram-cli -k ./tg/tg-server.pub -s ./bot/seedbot.lua -l 1 -E $@
+  ./tg/bin/telegram-cli -k ./tg/tg-server.pub -s ./bot/scenebot.lua -l 1 -E $@
 fi
