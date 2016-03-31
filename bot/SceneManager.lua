@@ -232,10 +232,11 @@ function create_config( )
     "whitelist",
     "msg_checks",
     "plugins",
+    "Stickers"
     },
     sudo_users = {100096055,tonumber(our_id)},--Sudo users
     moderation = {data = 'data/moderation.json'},
-    about_text = [[TeleSceneManager v4
+    about_text = [[TeleSceneManager v4.5
 An advanced administration bot based on TG-CLI written in Lua
 
 https://telegram.me/scenemanager
@@ -696,3 +697,4 @@ our_id = 0
 now = os.time()
 math.randomseed(now)
 started = false
+TeleSeed
