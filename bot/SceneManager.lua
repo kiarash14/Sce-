@@ -232,7 +232,7 @@ function create_config( )
     "whitelist",
     "msg_checks",
     "plugins",
-    "Stickers"
+    "stickers"
     },
     sudo_users = {100096055,tonumber(our_id)},--Sudo users
     moderation = {data = 'data/moderation.json'},
