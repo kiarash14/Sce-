@@ -1,4 +1,4 @@
-# [TeleSeed](https://telegram.me/SceneManager)
+# [SceneManager](https://telegram.me/SceneManager)
 
 [![https://gitter.im/SEEDTEAM/TeleSeed](https://badges.gitter.im/kiarash14/SceneManager.svg)](https://gitter.im/kiarash14/SceneManager?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -281,7 +281,7 @@ Create a realm using the `!createrealm` command.
 Check out this [tutorial by Telegram Geeks](http://telegramgeeks.com/2016/01/scenemanager-tutorial/) for further assistance with setup and installation.
 
 **Do not contact us** in private for support.
-Join our bot development group by sending `/join 1047524697` to [@TeleSeed](https://telegram.me/SceneManager)
+Join our bot development group by sending `/join 1047524697` to [@SceneManager](https://telegram.me/SceneManager)
 
 
 * * *
@@ -289,4 +289,4 @@ Join our bot development group by sending `/join 1047524697` to [@TeleSeed](http
 
 ### Our Telegram channels:
 
-Persian: [@IranSeed](https://telegram.me/SceneCh)
+Persian: [@SceneCh](https://telegram.me/SceneCh)
